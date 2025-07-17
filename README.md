@@ -17,6 +17,28 @@ SkillSphere Reminder Service is a microservice responsible for sending automated
 
 All configuration is environment-based. See `src/main/resources/application.properties` for details.
 
+## Environment Variables
+
+See `.env.example` for all required variables. Key variables:
+
+- `SPRING_MAIL_HOST`, `SPRING_MAIL_PORT`, `SPRING_MAIL_USERNAME`, `SPRING_MAIL_PASSWORD`, `SPRING_MAIL_FROM` — Mail config
+- `AUTH_SERVICE_URL`, `SKILL_SERVICE_URL` — Integration URLs
+- `SERVER_PORT` — Port to run the service (default: 8080)
+- `MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE` — Actuator endpoints to expose
+
+## Kubernetes Deployment
+
+- Kubernetes manifests are provided in the `k8s/` directory:
+  - `reminder-service-deployment.yaml` — Deployment with health checks and env var support (port 8082)
+  - `reminder-service-service.yaml` — ClusterIP Service for internal networking (port 8082)
+- Use ConfigMaps and Secrets for environment variables and secrets.
+- Example:
+  ```sh
+  kubectl apply -f k8s/reminder-service-deployment.yaml
+  kubectl apply -f k8s/reminder-service-service.yaml
+  ```
+- Integrate with Ingress or API Gateway for external access.
+
 ## Running the Service
 
 ### Local
@@ -29,7 +51,7 @@ All configuration is environment-based. See `src/main/resources/application.prop
 
 ```sh
 docker build -t skillsphere-reminder-service .
-docker run --env-file .env -p 8080:8080 skillsphere-reminder-service
+docker run --env-file .env -p 8082:8082 skillsphere-reminder-service
 ```
 
 ## Actuator Endpoints
