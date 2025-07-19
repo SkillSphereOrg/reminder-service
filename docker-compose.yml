@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  reminder-service:
+    build: .
+    container_name: reminder-service
+    restart: on-failure
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - AUTH_SERVICE_URL=http://auth-service:8080
+      - SKILL_SERVICE_URL=http://skill-service:8081
+    networks:
+      - skillsphere-net
+
+networks:
+  skillsphere-net:
+    external: true
